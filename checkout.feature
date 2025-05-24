@@ -1,28 +1,36 @@
-Feature: Cadastro no Checkout
+Funcionalidade: Checkout de compra
 
-  Como cliente da EBAC-SHOP
-  Quero concluir meu cadastro
-  Para finalizar minha compra
+  Como um cliente
+  Quero finalizar minha compra
+  Para receber os produtos em casa
 
-  Background:
-    Dado que estou na tela de cadastro do checkout
+  Cenário: Finalizar compra com sucesso
+    Dado que o usuário adicionou produtos ao carrinho
+    E está logado no sistema
+    Quando o usuário fornece um cartão de crédito válido
+    E informa um endereço de entrega completo
+    Então a compra é finalizada com sucesso
+    E o sistema exibe uma mensagem de confirmação
 
-  Scenario: Todos os campos obrigatórios devem estar preenchidos
-    Quando eu tento cadastrar sem preencher todos os campos obrigatórios
-    Então deve ser exibida uma mensagem de alerta indicando campos obrigatórios
+  Cenário: Tentativa de compra sem login
+    Dado que o usuário tenha produtos no carrinho
+    Quando tenta finalizar a compra sem estar logado
+    Então o sistema redireciona o usuário para a página de login
 
-  Scenario: E-mail com formato inválido
-    Quando eu insiro um e-mail com formato inválido
-    Então deve ser exibida uma mensagem de erro informando "E-mail inválido"
+  Cenário: Tentativa de compra com cartão inválido
+    Dado que o usuário está logado e com produtos no carrinho
+    Quando fornece dados de pagamento inválidos
+    Então o sistema exibe uma mensagem de erro
+    E a compra não é concluída
 
-  Esquema do Cenário: Validação de cadastro com campos vazios
-    Quando eu tento me cadastrar com os seguintes dados:
-      | nome   | email   | telefone  |
-      | <nome> | <email> | <telefone> |
-    Então deve ser exibida uma mensagem de alerta indicando campos obrigatórios
+  Esquema do Cenário: Finalizar compra com diferentes formas de pagamento
+    Dado que o usuário está logado e com produtos no carrinho
+    Quando fornece os dados de pagamento "<tipo_pagamento>"
+    E informa um endereço de entrega válido
+    Então a compra é finalizada com sucesso
 
     Exemplos:
-      | nome  | email              | telefone   |
-      | João  | joaoemail.com      | 1199999999 |
-      |       | maria@exemplo.com  | 1188888888 |
-      | Pedro | pedro@dominio.com  |            |
+      | tipo_pagamento     |
+      | Cartão de crédito  |
+      | Cartão de débito   |
+      | Pix                |
